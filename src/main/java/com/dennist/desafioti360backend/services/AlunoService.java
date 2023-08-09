@@ -34,4 +34,9 @@ public class AlunoService {
     public boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
+
+    public void delete(Long id) {
+        find(id);
+        repository.deleteById(id);
+    }
 }
