@@ -1,9 +1,12 @@
 package com.dennist.desafioti360backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_aluno")
@@ -17,6 +20,10 @@ public class Aluno implements Serializable {
     private String nome;
     private int idade;
     private String email;
+
+    @ManyToMany(mappedBy = "alunos")
+    @JsonIgnoreProperties({"alunos"})
+    private Set<Curso> cursos = new HashSet<>();
 
     public Aluno() {
     }
@@ -58,6 +65,10 @@ public class Aluno implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Curso> getCursos() {
+        return cursos;
     }
 
     @Override

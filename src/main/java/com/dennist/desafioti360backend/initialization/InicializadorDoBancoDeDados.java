@@ -53,5 +53,12 @@ public class InicializadorDoBancoDeDados implements CommandLineRunner {
         // salvar dados
         alunoRepository.saveAll(Arrays.asList(aluno1, aluno2));
         cursoRepository.saveAll(Arrays.asList(curso1, curso2));
+
+        // Adicionar alunos aos cursos
+        curso1.getAlunos().addAll(Arrays.asList(aluno1, aluno2));
+        curso2.getAlunos().add(aluno2);
+
+        // salvar dados
+        cursoRepository.saveAll(Arrays.asList(curso1, curso2));
     }
 }

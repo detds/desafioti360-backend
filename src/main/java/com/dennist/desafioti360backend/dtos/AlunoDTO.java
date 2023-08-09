@@ -1,7 +1,11 @@
 package com.dennist.desafioti360backend.dtos;
 
+import com.dennist.desafioti360backend.models.Curso;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class AlunoDTO {
 
@@ -11,6 +15,7 @@ public class AlunoDTO {
     private int idade;
     @NotBlank(message = "O email é obrigatório")
     private String email;
+    private Set<Curso> cursos = new HashSet<>();
 
     public String getNome() {
         return nome;
@@ -34,5 +39,13 @@ public class AlunoDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Curso> getCursos() {
+        return cursos;
+    }
+
+    public void setCursos(Set<Curso> cursos) {
+        this.cursos = cursos;
     }
 }
