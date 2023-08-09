@@ -51,6 +51,13 @@ public class AlunoController {
         return ResponseEntity.created(uri).body(obj);
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id,
+                                    @RequestBody @Valid AlunoDTO alunoDTO) {
+        Aluno obj = service.update(id, alunoDTO);
+        return ResponseEntity.ok().body(obj);
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

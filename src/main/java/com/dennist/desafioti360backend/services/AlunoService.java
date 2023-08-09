@@ -39,4 +39,10 @@ public class AlunoService {
         find(id);
         repository.deleteById(id);
     }
+
+    public Aluno update(Long id, AlunoDTO alunoDTO) {
+        Aluno entity = find(id);
+        BeanUtils.copyProperties(alunoDTO, entity);
+        return repository.save(entity);
+    }
 }
