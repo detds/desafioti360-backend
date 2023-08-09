@@ -37,4 +37,10 @@ public class CursoService {
         find(id);
         repository.deleteById(id);
     }
+
+    public Curso update(Long id, CursoDTO cursoDTO) {
+        Curso entity = find(id);
+        BeanUtils.copyProperties(cursoDTO, entity);
+        return repository.save(entity);
+    }
 }
