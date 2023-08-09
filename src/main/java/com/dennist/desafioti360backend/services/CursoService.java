@@ -32,4 +32,9 @@ public class CursoService {
 
         return repository.save(obj);
     }
+
+    public void delete(Long id) {
+        find(id);
+        repository.deleteById(id);
+    }
 }

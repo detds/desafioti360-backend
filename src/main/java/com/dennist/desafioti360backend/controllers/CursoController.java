@@ -1,7 +1,6 @@
 package com.dennist.desafioti360backend.controllers;
 
 import com.dennist.desafioti360backend.dtos.CursoDTO;
-import com.dennist.desafioti360backend.models.Aluno;
 import com.dennist.desafioti360backend.models.Curso;
 import com.dennist.desafioti360backend.services.CursoService;
 import jakarta.validation.Valid;
@@ -43,5 +42,11 @@ public class CursoController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(obj);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
