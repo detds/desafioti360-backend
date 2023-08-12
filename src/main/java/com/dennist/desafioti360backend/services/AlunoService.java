@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AlunoService {
@@ -23,6 +24,10 @@ public class AlunoService {
     public Aluno find(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id));
+    }
+
+    public List<Aluno> findAllById(Set<Long> ids) {
+        return repository.findAllById(ids);
     }
 
     public Aluno save(AlunoDTO alunoDTO) {

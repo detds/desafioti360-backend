@@ -2,6 +2,7 @@ package com.dennist.desafioti360backend.controllers;
 
 import com.dennist.desafioti360backend.dtos.CursoDTO;
 import com.dennist.desafioti360backend.models.Curso;
+import com.dennist.desafioti360backend.responses.AdicionarAlunosEmUmCursoResponse;
 import com.dennist.desafioti360backend.services.CursoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/cursos")
@@ -55,5 +58,15 @@ public class CursoController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/{cursoId}/alunos")
+    public ResponseEntity<?> adicionarAlunos(
+            @PathVariable Long cursoId,
+            @RequestBody Map<String, Set<Long>> request) {
+
+        AdicionarAlunosEmUmCursoResponse response = service.adicionarAlunos(cursoId, request.get("matrículas"));
+
+        return ResponseEntity.ok().body(response);
     }
 }
