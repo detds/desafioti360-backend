@@ -14,6 +14,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/cursos")
@@ -23,9 +24,13 @@ public class CursoController {
     private CursoService service;
 
     @GetMapping
-    public ResponseEntity<List<Curso>> findAll() {
-        List<Curso> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<List<CursoDTO>> findAll() {
+        List<Curso> cursoList = service.findAll();
+
+        List<CursoDTO> cursoDTOList = cursoList.stream()
+                .map(curso -> new CursoDTO(curso.getCodigo(), curso.getNome(), curso.getAlunos()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(cursoDTOList);
     }
 
     @GetMapping(value = "/{id}")
@@ -35,7 +40,7 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid CursoDTO cursoDTO) {
+    public ResponseEntity<Curso> save(@RequestBody @Valid CursoDTO cursoDTO) {
 
         Curso obj = service.save(cursoDTO);
 
@@ -48,8 +53,8 @@ public class CursoController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id,
-                                    @RequestBody @Valid CursoDTO cursoDTO) {
+    public ResponseEntity<Curso> update(@PathVariable(value = "id") Long id,
+                                        @RequestBody @Valid CursoDTO cursoDTO) {
         Curso obj = service.update(id, cursoDTO);
         return ResponseEntity.ok().body(obj);
     }
@@ -61,7 +66,7 @@ public class CursoController {
     }
 
     @PostMapping(value = "/{cursoId}/alunos")
-    public ResponseEntity<?> adicionarAlunos(
+    public ResponseEntity<AdicionarAlunosEmUmCursoResponse> adicionarAlunos(
             @PathVariable Long cursoId,
             @RequestBody Map<String, Set<Long>> request) {
 
