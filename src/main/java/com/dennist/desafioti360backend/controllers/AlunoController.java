@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/alunos")
@@ -31,9 +32,13 @@ public class AlunoController {
     @Operation(summary = "Obter todos os alunos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")})
-    public ResponseEntity<List<Aluno>> findAll() {
-        List<Aluno> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<List<AlunoDTO>> findAll() {
+        List<Aluno> alunoList = service.findAll();
+
+        List<AlunoDTO> alunoDTOList = alunoList.stream()
+                .map(aluno -> new AlunoDTO(aluno.getMatricula(), aluno.getNome(), aluno.getIdade(), aluno.getEmail(), aluno.getCursos()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(alunoDTOList);
     }
 
     @GetMapping(value = "/{id}")
@@ -42,15 +47,22 @@ public class AlunoController {
             @ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
             @ApiResponse(responseCode = "404", description = "ERRO - Aluno não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content),
             @ApiResponse(responseCode = "500", description = "ERRO - Erro inesperado", content = @Content)})
-    public ResponseEntity<Aluno> find(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<AlunoDTO> find(@PathVariable(value = "id") Long id) {
         Aluno obj = service.find(id);
-        return ResponseEntity.ok().body(obj);
+
+        AlunoDTO alunoDTO = new AlunoDTO(
+                obj.getMatricula(),
+                obj.getNome(),
+                obj.getIdade(),
+                obj.getEmail(),
+                obj.getCursos());
+        return ResponseEntity.ok().body(alunoDTO);
     }
 
     @PostMapping
     @Operation(summary = "Criar aluno")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso", content = @Content(schema = @Schema(implementation = Aluno.class))),
+            @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso", content = @Content(schema = @Schema(implementation = AlunoDTO.class))),
             @ApiResponse(responseCode = "400", description = "ERRO - Requisição inválida. Verifique os campos obrigatórios", content = @Content),
             @ApiResponse(responseCode = "409", description = "ERRO - Conflito. Email já foi utilizado", content = @Content)})
     public ResponseEntity<?> save(@RequestBody @Valid AlunoDTO alunoDTO) {
@@ -63,12 +75,19 @@ public class AlunoController {
 
         Aluno obj = service.save(alunoDTO);
 
+        AlunoDTO objAlunoDTO = new AlunoDTO(
+                obj.getMatricula(),
+                obj.getNome(),
+                obj.getIdade(),
+                obj.getEmail(),
+                obj.getCursos());
+
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(obj.getMatricula())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(obj);
+        return ResponseEntity.created(uri).body(objAlunoDTO);
     }
 
     @PutMapping(value = "/{id}")
@@ -76,11 +95,18 @@ public class AlunoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "ERRO - Requisição inválida. Verifique os campos obrigatórios", content = @Content),
-            @ApiResponse(responseCode = "404", description = "ERRO - Aluno não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
-    public ResponseEntity<Aluno> update(@PathVariable(value = "id") Long id,
-                                    @RequestBody @Valid AlunoDTO alunoDTO) {
+            @ApiResponse(responseCode = "404", description = "ERRO - Aluno não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content)})
+    public ResponseEntity<AlunoDTO> update(@PathVariable(value = "id") Long id,
+                                        @RequestBody @Valid AlunoDTO alunoDTO) {
         Aluno obj = service.update(id, alunoDTO);
-        return ResponseEntity.ok().body(obj);
+
+        AlunoDTO objAlunoDTO = new AlunoDTO(
+                obj.getMatricula(),
+                obj.getNome(),
+                obj.getIdade(),
+                obj.getEmail(),
+                obj.getCursos());
+        return ResponseEntity.ok().body(objAlunoDTO);
     }
 
     @DeleteMapping(value = "/{id}")
