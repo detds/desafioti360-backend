@@ -2,6 +2,7 @@ package com.dennist.desafioti360backend.dtos;
 
 import com.dennist.desafioti360backend.models.Curso;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
@@ -9,6 +10,7 @@ import java.util.Set;
 
 public class AlunoDTO {
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private final Long matricula;
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
@@ -16,6 +18,7 @@ public class AlunoDTO {
     private int idade;
     @NotBlank(message = "O email é obrigatório")
     private String email;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonIgnoreProperties({"alunos"})
     private Set<Curso> cursos;
 
