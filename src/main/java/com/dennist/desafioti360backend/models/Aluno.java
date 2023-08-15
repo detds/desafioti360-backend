@@ -39,10 +39,6 @@ public class Aluno implements Serializable {
         return matricula;
     }
 
-    public void setMatricula(Long matricula) {
-        this.matricula = matricula;
-    }
-
     public String getNome() {
         return nome;
     }
