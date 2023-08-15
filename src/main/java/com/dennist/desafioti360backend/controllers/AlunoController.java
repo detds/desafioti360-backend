@@ -52,7 +52,7 @@ public class AlunoController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id,
+    public ResponseEntity<Aluno> update(@PathVariable(value = "id") Long id,
                                     @RequestBody @Valid AlunoDTO alunoDTO) {
         Aluno obj = service.update(id, alunoDTO);
         return ResponseEntity.ok().body(obj);

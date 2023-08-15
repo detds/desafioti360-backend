@@ -1,21 +1,35 @@
 package com.dennist.desafioti360backend.dtos;
 
 import com.dennist.desafioti360backend.models.Curso;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class AlunoDTO {
 
+    private final Long matricula;
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
     @Range(min = 10, max = 120, message = "A idade deve estar entre 10 e 120 anos")
     private int idade;
     @NotBlank(message = "O email é obrigatório")
     private String email;
-    private Set<Curso> cursos = new HashSet<>();
+    @JsonIgnoreProperties({"alunos"})
+    private Set<Curso> cursos;
+
+    public AlunoDTO(Long matricula, String nome, int idade, String email, Set<Curso> cursos) {
+        this.matricula = matricula;
+        this.nome = nome;
+        this.idade = idade;
+        this.email = email;
+        this.cursos = cursos;
+    }
+
+    public Long getMatricula() {
+        return matricula;
+    }
 
     public String getNome() {
         return nome;
