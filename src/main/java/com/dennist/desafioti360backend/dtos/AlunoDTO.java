@@ -1,6 +1,6 @@
 package com.dennist.desafioti360backend.dtos;
 
-import com.dennist.desafioti360backend.models.Curso;
+import com.dennist.desafioti360backend.models.Matricula;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -18,16 +18,16 @@ public class AlunoDTO {
     private int idade;
     @NotBlank(message = "O email é obrigatório")
     private String email;
+    @JsonIgnoreProperties({"aluno", "id"})
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    @JsonIgnoreProperties({"alunos"})
-    private Set<Curso> cursos;
+    private Set<Matricula> matriculas;
 
-    public AlunoDTO(Long matricula, String nome, int idade, String email, Set<Curso> cursos) {
+    public AlunoDTO(Long matricula, String nome, int idade, String email, Set<Matricula> matriculas) {
         this.matricula = matricula;
         this.nome = nome;
         this.idade = idade;
         this.email = email;
-        this.cursos = cursos;
+        this.matriculas = matriculas;
     }
 
     public Long getMatricula() {
@@ -58,11 +58,11 @@ public class AlunoDTO {
         this.email = email;
     }
 
-    public Set<Curso> getCursos() {
-        return cursos;
+    public Set<Matricula> getMatriculas() {
+        return matriculas;
     }
 
-    public void setCursos(Set<Curso> cursos) {
-        this.cursos = cursos;
+    public void setMatriculas(Set<Matricula> matriculas) {
+        this.matriculas = matriculas;
     }
 }

@@ -47,7 +47,11 @@ public class AlunoService {
 
     public Aluno update(Long id, AlunoDTO alunoDTO) {
         Aluno entity = find(id);
-        BeanUtils.copyProperties(alunoDTO, entity);
+
+        entity.setNome(alunoDTO.getNome());
+        entity.setEmail(alunoDTO.getEmail());
+        entity.setIdade(alunoDTO.getIdade());
+
         return repository.save(entity);
     }
 }

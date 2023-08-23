@@ -1,6 +1,8 @@
 package com.dennist.desafioti360backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -11,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tb_curso")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "codigo")
 public class Curso implements Serializable {
 
     @Serial
@@ -20,14 +23,9 @@ public class Curso implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
     private String nome;
-
-    @ManyToMany
-    @JoinTable(
-            name = "tb_curso_aluno",
-            joinColumns = @JoinColumn(name = "curso_codigo"),
-            inverseJoinColumns = @JoinColumn(name = "aluno_matricula"))
-    @JsonIgnoreProperties({"cursos"})
-    private Set<Aluno> alunos = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "id.curso")
+    private Set<Matricula> matriculas = new HashSet<>();
 
     public Curso() {
     }
@@ -35,6 +33,15 @@ public class Curso implements Serializable {
     public Curso(Long codigo, String nome) {
         this.codigo = codigo;
         this.nome = nome;
+    }
+
+    @JsonIgnore
+    public Set<Aluno> getAlunos () {
+        Set<Aluno> lista = new HashSet<>();
+        for (Matricula x : matriculas) {
+            lista.add(x.getAluno());
+        }
+        return lista;
     }
 
     public Long getCodigo() {
@@ -49,8 +56,9 @@ public class Curso implements Serializable {
         this.nome = nome;
     }
 
-    public Set<Aluno> getAlunos() {
-        return alunos;
+    @JsonIgnore
+    public Set<Matricula> getMatriculas() {
+        return matriculas;
     }
 
     @Override

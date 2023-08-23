@@ -1,6 +1,6 @@
 package com.dennist.desafioti360backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tb_aluno")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "matricula")
 public class Aluno implements Serializable {
 
     @Serial
@@ -21,9 +22,9 @@ public class Aluno implements Serializable {
     private int idade;
     private String email;
 
-    @ManyToMany(mappedBy = "alunos")
-    @JsonIgnoreProperties({"alunos"})
-    private Set<Curso> cursos = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "id.aluno")
+    private Set<Matricula> matriculas = new HashSet<>();
 
     public Aluno() {
     }
@@ -33,6 +34,15 @@ public class Aluno implements Serializable {
         this.nome = nome;
         this.idade = idade;
         this.email = email;
+    }
+
+    @JsonIgnore
+    public Set<Curso> getCursos () {
+        Set<Curso> lista = new HashSet<>();
+        for (Matricula x : matriculas) {
+            lista.add(x.getCurso());
+        }
+        return lista;
     }
 
     public long getMatricula() {
@@ -63,8 +73,9 @@ public class Aluno implements Serializable {
         this.email = email;
     }
 
-    public Set<Curso> getCursos() {
-        return cursos;
+    @JsonIgnore
+    public Set<Matricula> getMatriculas() {
+        return matriculas;
     }
 
     @Override

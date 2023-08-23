@@ -36,7 +36,7 @@ public class AlunoController {
         List<Aluno> alunoList = service.findAll();
 
         List<AlunoDTO> alunoDTOList = alunoList.stream()
-                .map(aluno -> new AlunoDTO(aluno.getMatricula(), aluno.getNome(), aluno.getIdade(), aluno.getEmail(), aluno.getCursos()))
+                .map(aluno -> new AlunoDTO(aluno.getMatricula(), aluno.getNome(), aluno.getIdade(), aluno.getEmail(), aluno.getMatriculas()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(alunoDTOList);
     }
@@ -55,7 +55,7 @@ public class AlunoController {
                 obj.getNome(),
                 obj.getIdade(),
                 obj.getEmail(),
-                obj.getCursos());
+                obj.getMatriculas());
         return ResponseEntity.ok().body(alunoDTO);
     }
 
@@ -80,7 +80,7 @@ public class AlunoController {
                 obj.getNome(),
                 obj.getIdade(),
                 obj.getEmail(),
-                obj.getCursos());
+                obj.getMatriculas());
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri().path("/{id}")
@@ -105,7 +105,7 @@ public class AlunoController {
                 obj.getNome(),
                 obj.getIdade(),
                 obj.getEmail(),
-                obj.getCursos());
+                obj.getMatriculas());
         return ResponseEntity.ok().body(objAlunoDTO);
     }
 

@@ -1,5 +1,6 @@
 package com.dennist.desafioti360backend.controllers.exceptions;
 
+import com.dennist.desafioti360backend.services.exceptions.ObjectAlreadyExistsException;
 import com.dennist.desafioti360backend.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -38,5 +39,19 @@ public class ControllerExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(ObjectAlreadyExistsException.class)
+    public ResponseEntity<?> objectAlreadyExists(ObjectAlreadyExistsException e,
+                                                 HttpServletRequest request) {
+
+        StandardError error = new StandardError(
+                HttpStatus.CONFLICT.value(),
+                e.getMessage(),
+                System.currentTimeMillis(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 }
