@@ -2,7 +2,7 @@ package com.dennist.desafioti360backend.controllers;
 
 import com.dennist.desafioti360backend.dtos.CursoDTO;
 import com.dennist.desafioti360backend.models.Curso;
-import com.dennist.desafioti360backend.responses.AdicionarAlunosEmUmCursoResponse;
+import com.dennist.desafioti360backend.responses.AdicaoRemocaoAlunosResponse;
 import com.dennist.desafioti360backend.services.CursoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -99,11 +99,26 @@ public class CursoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Alunos adicionados ao curso com sucesso"),
             @ApiResponse(responseCode = "404", description = "ERRO - Objeto (curso ou matrícula) não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
-    public ResponseEntity<AdicionarAlunosEmUmCursoResponse> adicionarAlunos(
+    public ResponseEntity<AdicaoRemocaoAlunosResponse> adicionarAlunos(
             @PathVariable Long cursoId,
             @RequestBody @Schema(example = "{\"matrículas\": [0]}") Map<String, Set<Long>> request) {
 
-        AdicionarAlunosEmUmCursoResponse response = service.adicionarAlunos(cursoId, request.get("matrículas"));
+        AdicaoRemocaoAlunosResponse response = service.adicionarAlunos(cursoId, request.get("matrículas"));
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping(value = "/{cursoId}/alunos")
+    @Operation(summary = "Remover lista de alunos de um curso",
+            description = "Remover lista de alunos de um curso utilizando os números de matrículas fornecidos.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Alunos removidos do curso com sucesso."),
+            @ApiResponse(responseCode = "404", description = "ERRO - Objeto (curso ou matrícula) não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
+    public ResponseEntity<AdicaoRemocaoAlunosResponse> removerAlunos(
+            @PathVariable Long cursoId,
+            @RequestBody @Schema(example = "{\"matrículas\": [0]}") Map<String, Set<Long>> request) {
+
+        AdicaoRemocaoAlunosResponse response = service.removerAlunos(cursoId, request.get("matrículas"));
 
         return ResponseEntity.ok().body(response);
     }
