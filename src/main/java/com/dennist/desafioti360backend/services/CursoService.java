@@ -24,7 +24,7 @@ public class CursoService {
     @Autowired
     private AlunoService alunoService;
 
-    public List<Curso> findAll() {
+    public List<Curso> listarTodos() {
         return cursoRepository.findAll();
     }
 
@@ -33,7 +33,7 @@ public class CursoService {
                 .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id));
     }
 
-    public Curso save(CursoDTO cursoDTO) {
+    public Curso salvar(CursoDTO cursoDTO) {
 
         Curso obj = new Curso();
         BeanUtils.copyProperties(cursoDTO, obj);
@@ -41,13 +41,13 @@ public class CursoService {
         return cursoRepository.save(obj);
     }
 
-    public void delete(Long id) {
+    public void deletarPorId(Long id) {
         find(id);
         cursoRepository.deleteById(id);
     }
 
     @Transactional
-    public Curso update(Long id, CursoDTO cursoDTO) {
+    public Curso atualizar(Long id, CursoDTO cursoDTO) {
         Curso entity = find(id);
         BeanUtils.copyProperties(cursoDTO, entity);
         return cursoRepository.save(entity);

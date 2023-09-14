@@ -17,11 +17,11 @@ public class AlunoService {
     @Autowired
     private AlunoRepository repository;
 
-    public List<Aluno> findAll() {
+    public List<Aluno> listarTodos() {
         return repository.findAll();
     }
 
-    public Aluno find(Long id) {
+    public Aluno buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id));
     }
@@ -30,23 +30,23 @@ public class AlunoService {
         return repository.findAllById(ids);
     }
 
-    public Aluno save(AlunoDTO alunoDTO) {
+    public Aluno salvar(AlunoDTO alunoDTO) {
         Aluno obj = new Aluno();
         BeanUtils.copyProperties(alunoDTO, obj);
         return repository.save(obj);
     }
 
-    public boolean existsByEmail(String email) {
+    public boolean emailJaCadastrado(String email) {
         return repository.existsByEmail(email);
     }
 
-    public void delete(Long id) {
-        find(id);
+    public void detelarPorId(Long id) {
+        buscarPorId(id);
         repository.deleteById(id);
     }
 
-    public Aluno update(Long id, AlunoDTO alunoDTO) {
-        Aluno entity = find(id);
+    public Aluno atualizar(Long id, AlunoDTO alunoDTO) {
+        Aluno entity = buscarPorId(id);
         BeanUtils.copyProperties(alunoDTO, entity);
         return repository.save(entity);
     }

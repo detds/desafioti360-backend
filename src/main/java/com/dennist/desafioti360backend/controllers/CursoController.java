@@ -28,14 +28,14 @@ import java.util.stream.Collectors;
 public class CursoController {
 
     @Autowired
-    private CursoService service;
+    private CursoService cursoService;
 
     @GetMapping
     @Operation(summary = "Obter todos os cursos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")})
-    public ResponseEntity<List<CursoDTO>> findAll() {
-        List<Curso> cursoList = service.findAll();
+    public ResponseEntity<List<CursoDTO>> listarTodosOsCursos() {
+        List<Curso> cursoList = cursoService.listarTodos();
 
         List<CursoDTO> cursoDTOList = cursoList.stream()
                 .map(curso -> new CursoDTO(curso.getCodigo(), curso.getNome(), curso.getAlunos()))
@@ -49,8 +49,8 @@ public class CursoController {
             @ApiResponse(responseCode = "200", description = "Operação bem-sucedida"),
             @ApiResponse(responseCode = "404", description = "ERRO - Curso não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content),
             @ApiResponse(responseCode = "500", description = "ERRO - Erro inesperado", content = @Content)})
-    public ResponseEntity<Curso> find(@PathVariable(value = "id") Long id) {
-        Curso obj = service.find(id);
+    public ResponseEntity<Curso> bucarUmCurso(@PathVariable(value = "id") Long id) {
+        Curso obj = cursoService.find(id);
         return ResponseEntity.ok().body(obj);
     }
 
@@ -59,9 +59,9 @@ public class CursoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Curso criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "ERRO - Requisição inválida. Verifique os campos obrigatórios", content = @Content)})
-    public ResponseEntity<Curso> save(@RequestBody @Valid CursoDTO cursoDTO) {
+    public ResponseEntity<Curso> cadastrarCurso(@RequestBody @Valid CursoDTO cursoDTO) {
 
-        Curso obj = service.save(cursoDTO);
+        Curso obj = cursoService.salvar(cursoDTO);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri().path("/{id}")
@@ -77,9 +77,9 @@ public class CursoController {
             @ApiResponse(responseCode = "200", description = "Curso atualizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "ERRO - Requisição inválida. Verifique os campos obrigatórios", content = @Content),
             @ApiResponse(responseCode = "404", description = "ERRO - Curso não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
-    public ResponseEntity<Curso> update(@PathVariable(value = "id") Long id,
-                                        @RequestBody @Valid CursoDTO cursoDTO) {
-        Curso obj = service.update(id, cursoDTO);
+    public ResponseEntity<Curso> atualizarCurso(@PathVariable(value = "id") Long id,
+                                                @RequestBody @Valid CursoDTO cursoDTO) {
+        Curso obj = cursoService.atualizar(id, cursoDTO);
         return ResponseEntity.ok().body(obj);
     }
 
@@ -88,8 +88,8 @@ public class CursoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Curso excluído com sucesso"),
             @ApiResponse(responseCode = "404", description = "ERRO - Curso não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<Void> excluirCurso(@PathVariable Long id) {
+        cursoService.deletarPorId(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -99,11 +99,11 @@ public class CursoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Alunos adicionados ao curso com sucesso"),
             @ApiResponse(responseCode = "404", description = "ERRO - Objeto (curso ou matrícula) não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
-    public ResponseEntity<AdicaoRemocaoAlunosResponse> adicionarAlunos(
+    public ResponseEntity<AdicaoRemocaoAlunosResponse> adicionarListaDeAlunosAoCurso(
             @PathVariable Long cursoId,
             @RequestBody @Schema(example = "{\"matrículas\": [0]}") Map<String, Set<Long>> request) {
 
-        AdicaoRemocaoAlunosResponse response = service.adicionarAlunos(cursoId, request.get("matrículas"));
+        AdicaoRemocaoAlunosResponse response = cursoService.adicionarAlunos(cursoId, request.get("matrículas"));
 
         return ResponseEntity.ok().body(response);
     }
@@ -114,11 +114,11 @@ public class CursoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Alunos removidos do curso com sucesso."),
             @ApiResponse(responseCode = "404", description = "ERRO - Objeto (curso ou matrícula) não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
-    public ResponseEntity<AdicaoRemocaoAlunosResponse> removerAlunos(
+    public ResponseEntity<AdicaoRemocaoAlunosResponse> removerListaDeAlunosDoCurso(
             @PathVariable Long cursoId,
             @RequestBody @Schema(example = "{\"matrículas\": [0]}") Map<String, Set<Long>> request) {
 
-        AdicaoRemocaoAlunosResponse response = service.removerAlunos(cursoId, request.get("matrículas"));
+        AdicaoRemocaoAlunosResponse response = cursoService.removerAlunos(cursoId, request.get("matrículas"));
 
         return ResponseEntity.ok().body(response);
     }
