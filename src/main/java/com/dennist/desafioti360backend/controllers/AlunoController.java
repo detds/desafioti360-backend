@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,9 @@ public class AlunoController {
     @Autowired
     private AlunoService alunoService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping
     @Operation(summary = "Obter todos os alunos")
     @ApiResponses(value = {
@@ -36,7 +40,7 @@ public class AlunoController {
         List<Aluno> alunoList = alunoService.listarTodos();
 
         List<AlunoDTO> alunoDTOList = alunoList.stream()
-                .map(aluno -> new AlunoDTO(aluno.getMatricula(), aluno.getNome(), aluno.getIdade(), aluno.getEmail(), aluno.getCursos()))
+                .map(aluno -> modelMapper.map(aluno, AlunoDTO.class))
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(alunoDTOList);
     }
@@ -50,12 +54,8 @@ public class AlunoController {
     public ResponseEntity<AlunoDTO> buscarUmAluno(@PathVariable(value = "id") Long id) {
         Aluno obj = alunoService.buscarPorId(id);
 
-        AlunoDTO alunoDTO = new AlunoDTO(
-                obj.getMatricula(),
-                obj.getNome(),
-                obj.getIdade(),
-                obj.getEmail(),
-                obj.getCursos());
+        AlunoDTO alunoDTO = modelMapper.map(obj, AlunoDTO.class);
+
         return ResponseEntity.ok().body(alunoDTO);
     }
 
@@ -75,12 +75,7 @@ public class AlunoController {
 
         Aluno obj = alunoService.salvar(alunoDTO);
 
-        AlunoDTO objAlunoDTO = new AlunoDTO(
-                obj.getMatricula(),
-                obj.getNome(),
-                obj.getIdade(),
-                obj.getEmail(),
-                obj.getCursos());
+        AlunoDTO objAlunoDTO = modelMapper.map(obj, AlunoDTO.class);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri().path("/{id}")
@@ -100,12 +95,8 @@ public class AlunoController {
                                                    @RequestBody @Valid AlunoDTO alunoDTO) {
         Aluno obj = alunoService.atualizar(id, alunoDTO);
 
-        AlunoDTO objAlunoDTO = new AlunoDTO(
-                obj.getMatricula(),
-                obj.getNome(),
-                obj.getIdade(),
-                obj.getEmail(),
-                obj.getCursos());
+        AlunoDTO objAlunoDTO = modelMapper.map(obj, AlunoDTO.class);
+
         return ResponseEntity.ok().body(objAlunoDTO);
     }
 

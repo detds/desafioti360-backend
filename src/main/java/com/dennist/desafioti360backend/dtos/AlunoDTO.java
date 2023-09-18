@@ -11,7 +11,7 @@ import java.util.Set;
 public class AlunoDTO {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private final Long matricula;
+    private Long matricula;
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
     @Range(min = 10, max = 120, message = "A idade deve estar entre 10 e 120 anos")
@@ -22,12 +22,19 @@ public class AlunoDTO {
     @JsonIgnoreProperties({"alunos"})
     private Set<Curso> cursos;
 
+    public AlunoDTO() {
+    }
+
     public AlunoDTO(Long matricula, String nome, int idade, String email, Set<Curso> cursos) {
         this.matricula = matricula;
         this.nome = nome;
         this.idade = idade;
         this.email = email;
         this.cursos = cursos;
+    }
+
+    public void setMatricula(Long matricula) {
+        this.matricula = matricula;
     }
 
     public Long getMatricula() {
