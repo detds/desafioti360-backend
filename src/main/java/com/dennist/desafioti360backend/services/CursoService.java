@@ -28,7 +28,7 @@ public class CursoService {
         return cursoRepository.findAll();
     }
 
-    public Curso find(Long id) {
+    public Curso buscarPorId(Long id) {
         return cursoRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id));
     }
@@ -42,21 +42,21 @@ public class CursoService {
     }
 
     public void deletarPorId(Long id) {
-        find(id);
+        buscarPorId(id);
         cursoRepository.deleteById(id);
     }
 
     @Transactional
     public Curso atualizar(Long id, CursoDTO cursoDTO) {
-        Curso entity = find(id);
+        Curso entity = buscarPorId(id);
         BeanUtils.copyProperties(cursoDTO, entity);
         return cursoRepository.save(entity);
     }
 
     @Transactional
     public AdicaoRemocaoAlunosResponse adicionarAlunos(Long cursoId, Set<Long> matriculas) {
-        Curso cursoEntity = find(cursoId);
-        List<Aluno> alunosEncontrados = alunoService.findAllById(matriculas);
+        Curso cursoEntity = buscarPorId(cursoId);
+        List<Aluno> alunosEncontrados = alunoService.buscarTodosPorId(matriculas);
 
         verificarAlunosEncontrados(alunosEncontrados, matriculas);
 
@@ -71,7 +71,7 @@ public class CursoService {
 
     @Transactional
     public AdicaoRemocaoAlunosResponse removerAlunos(Long cursoId, Set<Long> matriculas) {
-        Curso cursoEntity = find(cursoId);
+        Curso cursoEntity = buscarPorId(cursoId);
 
         List<Aluno> alunosEncontradosNoCurso = cursoEntity.getAlunos().stream()
                 .filter(aluno -> matriculas.contains(aluno.getMatricula()))

@@ -50,7 +50,7 @@ public class CursoController {
             @ApiResponse(responseCode = "404", description = "ERRO - Curso não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content),
             @ApiResponse(responseCode = "500", description = "ERRO - Erro inesperado", content = @Content)})
     public ResponseEntity<Curso> bucarUmCurso(@PathVariable(value = "id") Long id) {
-        Curso obj = cursoService.find(id);
+        Curso obj = cursoService.buscarPorId(id);
         return ResponseEntity.ok().body(obj);
     }
 

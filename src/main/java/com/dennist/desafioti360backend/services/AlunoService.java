@@ -26,7 +26,7 @@ public class AlunoService {
                 .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id));
     }
 
-    public List<Aluno> findAllById(Set<Long> ids) {
+    public List<Aluno> buscarTodosPorId(Set<Long> ids) {
         return repository.findAllById(ids);
     }
 
