@@ -104,7 +104,8 @@ public class AlunoController {
     @Operation(summary = "Excluir aluno")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Aluno excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "ERRO - Aluno não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
+            @ApiResponse(responseCode = "404", description = "ERRO - Aluno não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content),
+            @ApiResponse(responseCode = "409", description = "ERRO - O aluno possui matrícula em um ou mais cursos e não pode ser excluído. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
     public ResponseEntity<Void> excluirAluno(@PathVariable Long id) {
         alunoService.detelarPorId(id);
         return ResponseEntity.noContent().build();

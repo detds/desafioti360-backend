@@ -87,7 +87,8 @@ public class CursoController {
     @Operation(summary = "Excluir curso")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Curso excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "ERRO - Curso não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
+            @ApiResponse(responseCode = "404", description = "ERRO - Curso não encontrado. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content),
+            @ApiResponse(responseCode = "409", description = "ERRO - O curso possui alunos matriculados e não pode ser excluído. A resposta de erro incluirá informações sobre o status, a mensagem e o timestamp", content = @Content) })
     public ResponseEntity<Void> excluirCurso(@PathVariable Long id) {
         cursoService.deletarPorId(id);
         return ResponseEntity.noContent().build();
