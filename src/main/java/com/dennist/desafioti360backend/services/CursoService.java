@@ -5,6 +5,7 @@ import com.dennist.desafioti360backend.models.Aluno;
 import com.dennist.desafioti360backend.models.Curso;
 import com.dennist.desafioti360backend.repositories.CursoRepository;
 import com.dennist.desafioti360backend.responses.AdicaoRemocaoAlunosResponse;
+import com.dennist.desafioti360backend.services.exceptions.DataIntegrityException;
 import com.dennist.desafioti360backend.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,13 @@ public class CursoService {
     }
 
     public void deletarPorId(Long id) {
-        buscarPorId(id);
-        cursoRepository.deleteById(id);
+        Curso cursoEncontrado = buscarPorId(id);
+
+        if (cursoEncontrado.getAlunos().isEmpty()) {
+            cursoRepository.deleteById(id);
+        } else {
+            throw new DataIntegrityException("O curso possui alunos matriculados e não pode ser excluído.");
+        }
     }
 
     @Transactional

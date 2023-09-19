@@ -3,6 +3,7 @@ package com.dennist.desafioti360backend.services;
 import com.dennist.desafioti360backend.dtos.AlunoDTO;
 import com.dennist.desafioti360backend.models.Aluno;
 import com.dennist.desafioti360backend.repositories.AlunoRepository;
+import com.dennist.desafioti360backend.services.exceptions.DataIntegrityException;
 import com.dennist.desafioti360backend.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,13 @@ public class AlunoService {
     }
 
     public void detelarPorId(Long id) {
-        buscarPorId(id);
-        repository.deleteById(id);
+        Aluno alunoEncontrado = buscarPorId(id);
+
+        if (alunoEncontrado.getCursos().isEmpty()) {
+            repository.deleteById(id);
+        } else {
+            throw new DataIntegrityException("O aluno possui matrícula em um ou mais cursos e não pode ser excluído.");
+        }
     }
 
     public Aluno atualizar(Long id, AlunoDTO alunoDTO) {
