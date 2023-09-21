@@ -13,15 +13,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/cursos")
@@ -38,13 +38,11 @@ public class CursoController {
     @Operation(summary = "Obter todos os cursos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")})
-    public ResponseEntity<List<CursoDTO>> listarTodosOsCursos() {
-        List<Curso> cursoList = cursoService.listarTodos();
+    public ResponseEntity<Page<CursoDTO>> listarTodosOsCursos(Pageable pageable) {
+        Page<Curso> cursoPage = cursoService.listarTodos(pageable);
 
-        List<CursoDTO> cursoDTOList = cursoList.stream()
-                .map(curso -> modelMapper.map(curso, CursoDTO.class))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(cursoDTOList);
+        Page<CursoDTO> cursoDTOPage = cursoPage.map(curso -> modelMapper.map(curso, CursoDTO.class));
+        return ResponseEntity.ok().body(cursoDTOPage);
     }
 
     @GetMapping(value = "/{id}")

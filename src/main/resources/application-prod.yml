@@ -1,4 +1,10 @@
 spring:
+  data:
+    # Configuração de Paginação
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 30
   datasource:
     url: ${DATA_URL}
     username: ${DATA_USERNAME}

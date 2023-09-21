@@ -7,6 +7,8 @@ import com.dennist.desafioti360backend.services.exceptions.DataIntegrityExceptio
 import com.dennist.desafioti360backend.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class AlunoService {
     @Autowired
     private AlunoRepository repository;
 
-    public List<Aluno> listarTodos() {
-        return repository.findAll();
+    public Page<Aluno> listarTodos(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Aluno buscarPorId(Long id) {

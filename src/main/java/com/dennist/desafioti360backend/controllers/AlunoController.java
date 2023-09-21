@@ -12,14 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/alunos")
@@ -36,13 +36,11 @@ public class AlunoController {
     @Operation(summary = "Obter todos os alunos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")})
-    public ResponseEntity<List<AlunoDTO>> listarTodosOsAlunos() {
-        List<Aluno> alunoList = alunoService.listarTodos();
+    public ResponseEntity<Page<AlunoDTO>> listarTodosOsAlunos(Pageable pageable) {
+        Page<Aluno> alunoPage = alunoService.listarTodos(pageable);
 
-        List<AlunoDTO> alunoDTOList = alunoList.stream()
-                .map(aluno -> modelMapper.map(aluno, AlunoDTO.class))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(alunoDTOList);
+        Page<AlunoDTO> alunoDTOPage = alunoPage.map(aluno -> modelMapper.map(aluno, AlunoDTO.class));
+        return ResponseEntity.ok().body(alunoDTOPage);
     }
 
     @GetMapping(value = "/{id}")
