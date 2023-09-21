@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,9 @@ public class CursoController {
     @Autowired
     private CursoService cursoService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping
     @Operation(summary = "Obter todos os cursos")
     @ApiResponses(value = {
@@ -38,7 +42,7 @@ public class CursoController {
         List<Curso> cursoList = cursoService.listarTodos();
 
         List<CursoDTO> cursoDTOList = cursoList.stream()
-                .map(curso -> new CursoDTO(curso.getCodigo(), curso.getNome(), curso.getAlunos()))
+                .map(curso -> modelMapper.map(curso, CursoDTO.class))
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(cursoDTOList);
     }

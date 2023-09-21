@@ -18,10 +18,17 @@ public class CursoDTO {
     @JsonIgnoreProperties({"cursos"})
     private Set<Aluno> alunos = new HashSet<>();
 
+    public CursoDTO() {
+    }
+
     public CursoDTO(Long codigo, String nome, Set<Aluno> alunos) {
         this.codigo = codigo;
         this.nome = nome;
         this.alunos = alunos;
+    }
+
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
     }
 
     public Long getCodigo() {
@@ -38,5 +45,9 @@ public class CursoDTO {
 
     public Set<Aluno> getAlunos() {
         return alunos;
+    }
+
+    public void setAlunos(Set<Aluno> alunos) {
+        this.alunos = alunos;
     }
 }
