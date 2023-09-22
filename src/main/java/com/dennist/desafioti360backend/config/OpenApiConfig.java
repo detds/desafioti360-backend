@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
 
-@OpenAPIDefinition(servers = @Server(url = "https://desafio-backend-api.fly.dev"),
+@OpenAPIDefinition(servers = @Server(url = "/", description = "Default Server URL"),
         info = @Info(
         description = "Microsserviço para Cadastro e Consulta de Alunos e Cursos",
         title = "Desafio TI360 - Backend API",
