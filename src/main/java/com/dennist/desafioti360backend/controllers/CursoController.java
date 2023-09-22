@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +39,7 @@ public class CursoController {
     @Operation(summary = "Obter todos os cursos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")})
-    public ResponseEntity<Page<CursoDTO>> listarTodosOsCursos(Pageable pageable) {
+    public ResponseEntity<Page<CursoDTO>> listarTodosOsCursos(@ParameterObject Pageable pageable) {
         Page<Curso> cursoPage = cursoService.listarTodos(pageable);
 
         Page<CursoDTO> cursoDTOPage = cursoPage.map(curso -> modelMapper.map(curso, CursoDTO.class));
